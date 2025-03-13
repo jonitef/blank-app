@@ -1,7 +1,3 @@
-# source f1_env/bin/activate  
-# pip install streamlit 
-# streamlit run fantasy_f1.py
-
 import streamlit as st
 from itertools import combinations
 
@@ -92,6 +88,10 @@ for i in range(20):
     race_driver_order.append(selected_driver)
     selected_race_drivers.append(selected_driver)  # Add the selected driver to the list
 
+# Input for 2x Boost Driver Selection
+st.sidebar.header("Select Driver for 2x Boost")
+boost_driver = st.sidebar.selectbox("Select driver to receive 2x points", list(driver_prices.keys()))
+
 # Create a dictionary for driver positions (for qualifying and race)
 qualifying_driver_positions = {driver: i + 1 for i, driver in enumerate(qualifying_driver_order)}
 race_driver_positions = {driver: i + 1 for i, driver in enumerate(race_driver_order)}
@@ -100,12 +100,9 @@ race_driver_positions = {driver: i + 1 for i, driver in enumerate(race_driver_or
 qualifying_driver_points = {driver: qualifying_points[qualifying_driver_positions[driver]] for driver in driver_prices}
 race_driver_points = {driver: race_points[race_driver_positions[driver]] for driver in driver_prices}
 
-# Apply the 2x boost to the driver in 1st position (only for their points, not constructors)
-first_qualifying_driver = qualifying_driver_order[0]
-first_race_driver = race_driver_order[0]
-
-qualifying_driver_points[first_qualifying_driver] *= 2
-race_driver_points[first_race_driver] *= 2
+# Apply the 2x boost to the selected driver (for both qualifying and race)
+qualifying_driver_points[boost_driver] *= 2
+race_driver_points[boost_driver] *= 2
 
 # Calculate total points for each driver (qualifying + race)
 driver_total_points = {driver: qualifying_driver_points[driver] + race_driver_points[driver] for driver in driver_prices}
